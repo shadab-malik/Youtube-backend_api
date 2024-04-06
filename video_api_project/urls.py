@@ -16,10 +16,14 @@ Including another URLconf
 """
 # video_api_project/urls.py
 
-from django.urls import path
-from video_api.views import VideoListView
+from django.conf.urls import include
+from django.contrib import admin
+from django.urls import include, path
+
 
 urlpatterns = [
-    path('videos/', VideoListView.as_view(), name='video-list'),
+    path('admin/', admin.site.urls),
+    path('', include('django_prometheus.urls')),
+    path('videos', include('video_api.urls')),
 ]
 
