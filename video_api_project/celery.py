@@ -31,7 +31,8 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     'fetch-and-store-videos-every-10-seconds': {
         'task': 'video_api.tasks.fetch_and_store_videos',
-        'schedule': timedelta(seconds=10)
+        'schedule': timedelta(seconds=10),
+        'args': (['AIzaSyDpTnhfUvO3aOUEEFZ4ptrw96iKvjS207g', 'AIzaSyC5i62_iHK6fq77TT-EUQjAcjp_xdYUqA4','AIzaSyAejXRbEjbT7K5m-kV8uAUrfk5qhkGnLYc'],), # List of API keys
     },
 }
 
