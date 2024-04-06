@@ -2,16 +2,25 @@ from celery import shared_task
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from .models import Video
-from datetime import datetime
+from datetime import datetime, timedelta
 
 @shared_task
 def fetch_and_store_videos(api_keys):
+    # Define the datetime for publishedAfter
+    week_ago = datetime.now() - timedelta(days=7)  # eg 7 days ago
+
     for api_key in api_keys:
         try:
             youtube = build('youtube', 'v3', developerKey=api_key)
 
-            request = youtube.search().list(q='cricket', type='video', part='snippet', maxResults=50)
-            
+            request = youtube.search().list(
+                q='cricket',
+                type='video', 
+                part='snippet', 
+                maxResults=50,
+                publishedAfter=week_ago.isoformat() + 'Z' # Convert datetime to ISO 8601 format)
+            )  
+
             response = request.execute()
 
             for item in response['items']:
