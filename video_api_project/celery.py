@@ -21,13 +21,16 @@ class BaseTask(Task):
                       lambda signum, frame: logging.info('SIGTERM received, wait till the task finished'))
         return super().__call__(*args, **kwargs)
 
+# Configure Celery app
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'video_api_project.settings')
 
 app = Celery('video_api_project',
              broker=f'redis://:{os.getenv("REDIS_PASSWORD")}@{os.getenv("REDIS_HOST")}:{os.getenv("REDIS_PORT")}',
              video_api_project=f'redis://:{os.getenv("REDIS_PASSWORD")}@{os.getenv("REDIS_HOST")}:{os.getenv("REDIS_PORT")}',)
+
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
+# Define Celery Beat schedule
 app.conf.beat_schedule = {
     'fetch-and-store-videos-every-10-seconds': {
         'task': 'video_api.tasks.fetch_and_store_videos',

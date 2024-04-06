@@ -15,10 +15,11 @@ class VideoListView(APIView,CursorPagination):
             request.query_params._mutable = False
 
         data = Video.objects.all()
-
+        
+        # Ordering videos in reverse chronological order of publishing datetime
         self.ordering = "-published_datetime"
         self.page_size_query_param = "page_size"
-        
+
         paginated_data = self.paginate_queryset(
             data, request, view=self)
 
